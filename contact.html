@@ -1,0 +1,124 @@
+
+<html>
+<head>
+		<link rel="icon" href="busmap.png"/>
+		<title>East Bay Bus Map</title>
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans:600,800|Press+Start+2P&display=swap" rel="stylesheet">
+
+		<style type="text/css">
+		body
+		{
+		font-family: 'Work Sans', 'verdana', sans-serif;
+		font-size: 18px;
+		text-align: center;
+		margin: 50px;
+		background-color: #acd8eb;
+		color: #4d4d4d;
+		}
+		body img
+		{
+			width: 40%;
+		}
+		a
+		{
+			text-decoration: underline;
+			color: #4d4d4d;
+			background-color: #acd8eb;
+			padding: 4px;
+		}
+		a:hover, a:active
+		{
+			color: #acd8eb;
+			background-color: #4d4d4d;
+		}
+		a.img:hover
+		{
+			color: #4d4d4d;
+			background-color: #acd8eb;
+		}
+
+		input, textarea
+		{
+
+			font-size: 16px;
+			font-family: 'Work Sans', sans-serif;
+			display: block;
+			background-color: #EDEDED;
+			color: #525363;
+			margin: 0 auto;
+			border: none;
+			outline: none;
+			resize: none;
+			overflow: auto;
+			padding: 10px;
+		}
+		input, select option, textarea
+		{
+			width: 40%;
+		}
+		textarea
+		{
+			padding: 10px 15px;
+		}
+		input:focus, textarea:focus
+		{
+			background-color: #DDD;
+		}
+		textarea:focus
+		{
+			min-height: 200px;
+		}
+		#steptwo
+		{
+			display: none;
+		}
+		#toStepTwo
+		{
+			padding: 10px;
+		}
+		.dummyLink, button
+		{
+			margin: 15px 0px;
+			background-color: #EDEDED;
+			color: #4d4d4d;
+			font-weight: 800;
+			padding: 5px !important;
+			border-radius: .4em;
+			border: 0;
+			cursor: pointer;
+			display: inline;
+			font-family: 'Work Sans', sans-serif;
+			font-size: 18px;
+		}
+		.dummyLink:hover, button:hover
+		{
+			color: #acd8eb;
+			background-color: #4d4d4d;
+			display: inline;
+		}
+		</style>
+</head>
+<body>
+	<p>Contact us</p>
+	<p>
+			<form method="post" action="mail.php">
+					 Subject: <select name="subject">
+						<option value="translate">English-Chinese Translation</option>
+						<option value="correct">Map correction</option>
+						<option value="suggest">Map suggestion</option>
+						<option value="other">Other</option>
+					</select>
+					<input type="text" name="name" placeholder="Name"/>
+					<input type="text" name="email" placeholder="Email Address"/>
+					<textarea class="input" name="message" placeholder="Your message" maxlength="500"></textarea>
+					<p>
+					<button type="submit" name="submit">send message</button></p>
+				</div>
+			</form>
+	</p>
+		<a href="index.html">back to map</a> | 
+		<a href="donate.html">donate</a> |
+		<a href="store.html">store</a>
+	</p>
+</body>
+</html>
