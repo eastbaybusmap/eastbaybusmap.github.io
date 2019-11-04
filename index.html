@@ -4,18 +4,19 @@
 		<title>East Bay Bus Map</title>
 		<link href="https://fonts.googleapis.com/css?family=Work+Sans:600,800|Press+Start+2P&display=swap" rel="stylesheet">
 		<style type="text/css">
+		body, html
+		{
+			height: 100%;
+			margin: 0;
+		}
 		body
 		{
-			font-family: 'Work Sans', 'verdana', sans-serif;
+			font-family: 'Myriad Pro', 'Work Sans', 'verdana', sans-serif;
 			font-size: 18px;
 			text-align: center;
-			margin: 50px;
 			background-color: #acd8eb;
 			color: #4d4d4d;
-		}
-		body img
-		{
-			width: 40%;
+			font-weight: 200;
 		}
 		a
 		{
@@ -29,20 +30,19 @@
 			color: #acd8eb;
 			background-color: #4d4d4d;
 		}
-		a.img:hover
+		.map
 		{
-			color: #4d4d4d;
-			background-color: #acd8eb;
+			width: 100%;
 		}
 		</style>
 </head>
 <body>
-	<p>click on map to open full-size image</p>
-	<p><a href="Berkeley%20and%20Oakland%20Local%20Bus%20lines.tif" class="img"><img src="Berkeley%20and%20Oakland%20Local%20Bus%20lines.png"/></a></p>
+	<p><img src="map.svg" alt="East Bay Bus Map" class="map"></p>
 	<p>
-		<a href="contact.html">contact</a> | 
 		<a href="donate.html">donate</a> |
 		<a href="store.html">store</a>
 	</p>
+	<p>please share map suggestions, corrections, and other comments with us<br/>eastbaybusmap@gmail.com
+	<p>thank you!</p>
 </body>
 </html>
