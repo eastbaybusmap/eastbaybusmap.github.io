@@ -1,0 +1,415 @@
+<html>
+<head>
+		<link rel="icon" href="favicon.png"/>
+		<title>East Bay Bus Map</title>
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans:400,600,800|Press+Start+2P&display=swap" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+  <script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+  crossorigin="anonymous"></script>
+
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$(".trip_planner").click(function(){
+				$("#trip_planner").slideToggle(500);
+				$("#contact").slideUp(500);
+			});
+			$(".contact").click(function(){
+				$("#contact").slideToggle(500);
+				$("#trip_planner").slideUp(500);
+			});
+
+		function check_input() {
+			data = [true];
+			$('.required').each(function()
+			{
+				if ($(this).val() == "")
+				{
+					data[0] = false;
+					data.push($(this).attr("name"));
+				}
+			})
+			if (data[0] == true)
+			{
+				$('.required').each(function(){
+					data.push($(this).val());
+				});
+			}
+			return data;
+		};
+
+			$("input.go").click(function(){
+				var data = check_input();
+				var text = "";
+				completed = data[0];
+				console.log(data);
+
+				if (completed)
+				{
+					$("#error_message").hide();
+					$("#trip_planner").append($("span.results"));
+					$(".results").show().text("");
+					$(".results").append("Calculating route from " + "<b>" + data[1] + "</b>" + " to " + "<b>" + data[2] + "</b>...");
+				}
+				else
+				{
+					$(".results").hide();
+					$("#trip_planner").append($("#error_message"));
+					$("#error_message").show();
+					for (i = 1; i < data.length; i++)
+					{
+						text = text + data[i];
+						if (i < data.length - 1)
+						{
+							text = text + " and ";
+						}
+					}
+					$(".error").text(text);
+				}
+			});
+
+			$('input.text').focusout(function()
+			{
+				var text = $(this).val();
+				if (text !== "")
+				{
+					height = $(this).parent().css('height');
+					$(this).parent().css('height', height);
+					$(this).hide();
+					$(this).parent().append($("<span class='fixed'>" + text + "</span>"));
+				}
+			});
+
+			$(document).on('click','.fixed', function()
+			{
+				$(this).parent().find('input.text').show().val("");
+				$(this).hide();
+			});
+
+		//map tracking
+
+			var w = $(window).width();
+			var h = $(window).height() - $('footer').height() - 1;
+			var ratio = w/h;
+			$("#loading").width(w).height(h);
+			$(".lds-dual-ring").css({'top': h/2 - 40 + 'px'});
+
+			function scale_map(scale){
+			$('#map').animate({'width' : scale * w + 'px ', 'height' : scale * h * ratio + 'px'});
+			};
+			var current_scale = 3.5;
+
+			function map_position(x,y){
+				var x2 = parseInt($("#map").css('left'));
+				var y2 = parseInt($("#map").css('top'));
+				var dx = Math.abs(x2 - x);
+				var dy = Math.abs(y2 - y);
+				var distance = Math.sqrt(dx*dx + dy*dy);
+				$('#map').animate({'left': x + 'px', 'top': y +'px'}, distance / 5);
+			};
+
+			//load by location
+			function map_origin(){
+				var richmond = false;
+				var berkeley = false;
+				var emeryville = false;
+				var oakland = true;
+				var east_oakland = false;
+
+				if (richmond)
+				{
+					map_position(-200,-200);
+				}
+				if (berkeley)
+				{
+					map_position(-500,-1600);
+				}
+				if (emeryville)
+				{
+					map_position(-50,-2200);
+				}
+				if (oakland)
+				{
+					map_position(-900,-3200);
+				}
+				if (east_oakland)
+				{
+					map_position(-2300,-2800);
+				}
+			};
+
+			$('.open_legend').click(function()
+			{
+				var new_scale = 2;
+				var scale_ratio = new_scale / current_scale;
+				map_position(-2200 * scale_ratio,-200 * scale_ratio);
+				scale_map(new_scale);
+				current_scale = new_scale;
+			});
+
+
+			$(window).on('resize', function(){
+				$("#container").width(w).height(h);
+			});
+
+			$("#map").on('load', function(){
+				$("#loading").hide();
+				$("#container").width(w).height(h);
+				scale_map(current_scale);
+				map_origin();
+			});
+
+		});
+		</script>
+
+		<style type="text/css">
+		body, html
+		{
+			height: 100%;
+			margin: 0;
+			overflow: hidden;
+		}
+		body
+		{
+			font-family: 'Work Sans', 'verdana', sans-serif;
+			font-size: 18px;
+			text-align: center;
+			background-color: #acd8eb;
+			color: #4d4d4d;
+		}
+		#container
+		{
+			overflow: scroll;
+			z-index: -1;
+		}
+		#map
+		{
+			position: relative;
+			top: 0px;
+			left: 0px;
+		}
+		#loading
+		{
+			background-color: #29abe2;
+		}
+		#container, #loading
+		{
+			position: absolute;
+			top: 0px;
+			left: 0px;
+		}
+		footer
+		{
+			position: fixed;
+			bottom: 0px;
+			left: 0px;
+			display: block;
+			width: 100%;
+			background-color: #FFF;
+			border-top: 1px solid #686868;
+			z-index: 0;
+		}
+		footer .item
+		{
+			padding: 15px;
+			display: inline-block;
+			float: left;
+			text-align: center;
+		}
+		footer .trip_planner, footer .contact
+		{
+			float: right;
+		}
+		a, .a
+		{
+			text-decoration: underline;
+			color: #4d4d4d;
+			padding: 4px;
+			cursor: pointer;
+			font-weight: 800;
+		}
+		a:hover, a:active, .a:hover, .a:active
+		{
+			color: #acd8eb;
+		}
+		#trip_planner, #contact
+		{
+			position: absolute;
+			bottom: 56px;
+			float: right;
+			width: 400px;
+			border: 1px solid #686868;
+			background-color: #FFF;
+			z-index: 1;
+		}
+		#trip_planner
+		{
+			right: 100px;
+		}
+		#contact
+		{
+			right: 25px;
+		}
+		.line
+		{
+			display: block;
+			width: 100%;
+			text-align: left;
+			border-bottom: 1px solid #686868;
+			padding: 15px 0px 15px 15px;
+			box-sizing: border-box;
+		}
+		input, textarea
+		{
+			border: none;
+			outline: none;
+			padding: none;
+			font-family: 'Work Sans', 'verdana', sans-serif;
+			font-size: 18px;
+			font-weight: 600;
+		}
+		textarea
+		{
+			height: 200px;
+			width: 100%;
+			max-height: 300px;
+			resize: none;
+		}
+		input.text:focus, textarea:focus, input.go
+		{
+			color: #4d4d4d;
+		}
+		.fixed
+		{
+			color: #4d4d4d;
+			font-weight: 600;
+			background-color: #acd8eb;
+			border-radius: 1em;
+			padding: 7px;
+			cursor: pointer;
+		}
+		.line:last-child
+		{
+			border-bottom: none;
+		}
+		#trip_planner input
+		{
+			font-style: italic;
+		}
+		input.go
+		{
+			font-style: normal;
+			font-weight: 800;
+			border: 1px solid #acd8eb;
+			cursor: pointer;
+			float: right;
+			margin-right: 15px;
+		}
+		#contact input.go
+		{
+			margin-bottom: 15px;
+		}
+		input.go:hover
+		{
+			border: 1px solid #686868;
+			background-color: #acd8eb;
+		}
+		#trip_planner .results, #trip_planner #error_message 
+		{
+			text-align: center;
+			font-weight: 400;
+			font-size: 15px;
+		}
+		#trip_planner .results b, #trip_planner #error_message b
+		{
+			font-weight: 600;
+		}
+		#trip_planner, #contact, #error_message, .results
+		{
+			display: none;
+		}
+		/*loading*/
+		.lds-dual-ring {
+		position: relative;
+		  display: inline-block;
+		  width: 80px;
+		  height: 80px;
+		}
+		.lds-dual-ring:after {
+		  content: " ";
+		  display: block;
+		  width: 64px;
+		  height: 64px;
+		  margin: 8px;
+		  border-radius: 50%;
+		  border: 10px solid #fff;
+		  border-color: #fff transparent #fff transparent;
+		  animation: lds-dual-ring 3s linear infinite;
+		  opacity: .9;
+		}
+		@keyframes lds-dual-ring {
+		  0% {
+		    transform: rotate(0deg);
+		  }
+		  100% {
+		    transform: rotate(360deg);
+		  }
+		}
+
+		</style>
+</head>
+<body>
+	<footer>
+		<div class="item"><a href="donate.html">donate</a></div>
+		<div class="item"><a href="store.html">store</a></div>
+		<div class="item open_legend a">view legend</div>
+		<div class="item contact a">contact</div>
+		<div class="item trip_planner a">trip planner</div>
+	</footer>
+
+
+	<div id="trip_planner">
+		<span class="line">
+			<label for="origin">Origin:</label>
+			<input list="stops" id="origin" name="origin" placeholder="MLK & Adeline" class="text required">
+		</span>
+		<span class="line">
+			<label for="destination">Destination:</label>
+			<input list="stops" id="destination" name="destination" placeholder="International & 39th" class="text required">
+			<input type="button" value="Go" class="go"/>
+		</span>
+	</div>
+
+	<div id="contact">
+		<span class="line">
+		<input name="contact" placeholder="Your email address" class="text" name="email">
+		</span>
+		<span class="line">
+		<textarea placeholder="Your message" wrap="hard" class="text" name="message"></textarea>
+		<input type="button" name="send_message" value="Send" class="go"/>
+		</span>
+	</div>
+
+	<!-- map background -->
+	<div id="loading">
+		<div class="lds-dual-ring"></div>
+	</div>
+	<div id="container">
+		<object type="image/svg+xml" data="east bay bus map redux.svg" id="map"></object>
+	</div>
+
+	<!-- hidden elements -->
+	<datalist id="stops">
+		<option value="MLK & Adeline">
+		<option value="Adeline & Parker">
+		<option value="16th & Parker">
+		<option value="29th & MLK">
+	</datalist>
+	<span class="line results"></span>
+	<div id="error_message" class="line">Please enter <span class="error"></span></div>
+</body>
+</html>
