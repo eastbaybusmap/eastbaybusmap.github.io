@@ -3,14 +3,12 @@
 		<link rel="icon" href="favicon.png"/>
 		<title>East Bay Bus Map</title>
 		<link href="https://fonts.googleapis.com/css?family=Work+Sans:400,600,800|Press+Start+2P&display=swap" rel="stylesheet">
-<script
-  src="https://code.jquery.com/jquery-3.4.1.js"
-  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-  crossorigin="anonymous"></script>
-  <script
-  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
-  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
-  crossorigin="anonymous"></script>
+	<script
+	  src="https://code.jquery.com/jquery-3.4.1.js"
+	  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+	  crossorigin="anonymous"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+
 
 		<script type="text/javascript">
 		$(document).ready(function(){
@@ -89,6 +87,23 @@
 				$(this).parent().find('input.text').show().val("");
 				$(this).hide();
 			});
+		//import data to trip planner
+		var data;
+		$.ajax({
+			url: "data/busstops.csv",
+			async: false,
+			success: function(response)
+			{
+				data = $.csv.toArrays(response);
+			},
+			dataType: "text",
+			complete: function(data){
+				for (i = 0; i < data.length; i+=3)
+				{
+					$("datalist#stops").append("<option value=\"" + data[i] +"\"></option>");
+				}
+			}
+		});
 
 		//map tracking
 
@@ -403,12 +418,7 @@
 	</div>
 
 	<!-- hidden elements -->
-	<datalist id="stops">
-		<option value="MLK & Adeline">
-		<option value="Adeline & Parker">
-		<option value="16th & Parker">
-		<option value="29th & MLK">
-	</datalist>
+	<datalist id="stops"></datalist>
 	<span class="line results"></span>
 	<div id="error_message" class="line">Please enter <span class="error"></span></div>
 </body>
